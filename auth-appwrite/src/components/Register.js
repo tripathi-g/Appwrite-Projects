@@ -1,29 +1,45 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import appwriteLogo from "../img/appwrite.png";
 import { account } from "../utils/appwriteConfig";
 import { ID } from "appwrite";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
+import userContext from "../utils/userContext";
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
+  const { userInfo, setUserInfo } = useContext(userContext);
 
-  const registerUser = (e) => {
-    e.preventDefault();
-    account
-      .create(ID.unique(), email, password, fullName)
-      .then((res) => {
-        console.log(res);
-        setStatusMessage("Sign up successful. You can login now");
-        return <Navigate to="/profile" />;
-      })
-      .catch((err) => {
-        console.log(err);
-        setStatusMessage(err.message);
-      });
+  const navigate = useNavigate();
+  const registerUser = async (e) => {
+    try {
+      e.preventDefault();
+      const promise = await account.create(
+        ID.unique(),
+        email,
+        password,
+        fullName
+      );
+      if (promise) {
+        loginUser();
+      }
+    } catch (err) {
+      setStatusMessage(err.message);
+    }
   };
+
+  const loginUser = () => {
+    account.createEmailSession(email, password).then((res) => {
+      setUserInfo(res);
+      navigate("/profile");
+    });
+  };
+
+  if (userInfo.length !== 0) {
+    return <Navigate to="/profile" />;
+  }
 
   return (
     <div className="flex flex-col h-full p-4 justify-center items-center">

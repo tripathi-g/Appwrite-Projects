@@ -1,12 +1,10 @@
 import appwriteLogo from "../img/appwrite.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import userContext from "../utils/userContext";
-
 const Home = () => {
-  const data = useContext(userContext);
-
-  return data.length === 0 ? (
+  const { userInfo } = useContext(userContext);
+  return userInfo.length === 0 ? (
     <div className="m-4 flex flex-col h-full justify-center items-center">
       <div className="flex flex-wrap justify-center items-center">
         <h1 className="inline text-3xl font-bold">
@@ -33,7 +31,7 @@ const Home = () => {
       </div>
     </div>
   ) : (
-    <h1>Already Logged in</h1>
+    <Navigate to="/profile" />
   );
 };
 
