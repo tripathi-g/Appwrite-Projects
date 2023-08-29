@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import appwriteLogo from "../img/appwrite.png";
+import Header, { headerWithHomeBtn } from "./Header";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { account } from "../utils/appwriteConfig";
 import userContext from "../utils/userContext";
@@ -10,9 +10,10 @@ const Login = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const navigate = useNavigate();
   const { userInfo, setUserInfo } = useContext(userContext);
-
+  const HeaderModified = headerWithHomeBtn(Header);
   const handleLogin = async (e) => {
     e.preventDefault();
+    setStatusMessage("");
     const promise = account.createEmailSession(email, password);
     promise.then(
       (res) => {
@@ -29,25 +30,15 @@ const Login = () => {
     return <Navigate to="/profile" />;
   }
   return (
-    <div className="flex flex-col h-full p-4 justify-center items-center">
-      <div className="flex flex-wrap justify-center items-center">
-        <h1 className="inline text-3xl font-bold">
-          Authentication App powered by
-        </h1>
-        &nbsp; &nbsp;
-        <img
-          className="inline h-10 w-auto"
-          src={appwriteLogo}
-          alt="appwrite logo"
-        />
-      </div>
+    <div className="flex h-full flex-col p-4 justify-center items-center">
+      <HeaderModified />
       <form className="w-5/6 md:w-[350px]" onSubmit={handleLogin}>
         <div className="w-full flex-col mt-8 flex justify-center items-center">
           <div className="w-full">
             <label htmlFor="email">Email</label>
             <input
               type="email"
-              className="block w-full border border-gray-400 px-4 py-2 rounded-md"
+              className="block w-full border border-gray-400 px-4 py-2 rounded-sm"
               id="email"
               name="email"
               value={email}
@@ -62,7 +53,7 @@ const Login = () => {
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              className="block w-full border border-gray-400 px-4 py-2 rounded-md"
+              className="block w-full border border-gray-400 px-4 py-2 rounded-sm"
               id="password"
               name="password"
               value={password}
@@ -75,14 +66,20 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="rounded-md bg-pink-600 text-white px-4 py-2.5 font-bold mt-4 w-full"
+            className="rounded-sm bg-pink-600 text-white px-4 py-2.5 font-bold mt-4 w-full"
           >
-            Login
+            Sign In
           </button>
           <Link to="/register" className="w-full">
-            <p className="mt-2 text-center">Sign Up</p>
+            <p className="mt-2 text-pink-800 font-semibold">
+              Don't have and Account ? Sign Up here
+            </p>
           </Link>
-          <p className="m-4">{statusMessage}</p>
+          {statusMessage !== "" ? (
+            <p className="my-4 p-4 text-sm bg-red-100">{statusMessage}</p>
+          ) : (
+            ""
+          )}
         </div>
       </form>
     </div>

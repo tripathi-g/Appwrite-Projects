@@ -1,10 +1,21 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import userContext from "../utils/userContext";
 import { account } from "../utils/appwriteConfig";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const Profile = () => {
   const { userInfo, setUserInfo } = useContext(userContext);
+
+  useEffect(() => {
+    account.createJWT().then(
+      (res) => {
+        console.log(res);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  });
 
   const handleLogout = () => {
     account.deleteSession("current").then((res) => {
@@ -22,7 +33,7 @@ const Profile = () => {
             Your Email id is {userInfo.email}{" "}
           </h3>
           <button
-            className="rounded-md border border-pink-700 text-pink-700 py-4 px-8 font-medium text-xl mt-3"
+            className="rounded-sm border border-pink-700 text-pink-700 py-4 px-8 font-medium text-xl mt-3"
             onClick={handleLogout}
           >
             Logout

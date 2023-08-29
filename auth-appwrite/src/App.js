@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
+import GoogleLogin from "./components/GoogleLogin";
 import { checkIsLoggedIn } from "./utils/useIsLoggedIn";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/googlelogin" element={<GoogleLogin />} />
         </Routes>
       </Router>
       <Outlet />
