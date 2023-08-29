@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import Header, { headerWithHomeBtn } from "./Header";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { account } from "../utils/appwriteConfig";
