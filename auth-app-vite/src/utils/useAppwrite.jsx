@@ -1,12 +1,9 @@
 import { Client, Account, ID } from "appwrite";
 const client = new Client();
-console.log(
-  import.meta.env.APPWRITE_ENDPOINT,
-  import.meta.env.APPWRITE_PROJECT_ID
-);
-client
-  .setEndpoint("https://appwritelocal.stripathi.tech/v1")
-  .setProject("64eb1f41c5f0f30ab422");
+const endpoint = import.meta.env.VITE_APPWRITE_ENDPOINT;
+const projectId = import.meta.env.VITE_APPWRITE_PROJECT_ID;
+
+client.setEndpoint(endpoint).setProject(projectId);
 export const account = new Account(client);
 
 export const loginUserEmail = async (email, password) => {
@@ -16,3 +13,5 @@ export const loginUserEmail = async (email, password) => {
 export const signUpUser = async (email, password, fullName) => {
   return await account.create(ID.unique(), email, password, fullName);
 };
+
+// export const
