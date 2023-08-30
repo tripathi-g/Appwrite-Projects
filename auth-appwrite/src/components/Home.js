@@ -7,10 +7,11 @@ const Home = () => {
   const { userInfo } = useContext(userContext);
 
   const handleGoogleLogin = () => {
-    account.createOAuth2Session(
-      "google",
-      window.location.hostname + "/profile"
-    );
+    try {
+      account.createOAuth2Session("google", "authapp.tripathig.in/googlelogin");
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return userInfo.length === 0 ? (
