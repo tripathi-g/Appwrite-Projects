@@ -1,73 +1,45 @@
 import { useState, useContext } from "react";
-import Header, { headerWithHomeBtn } from "./Header";
-import { account } from "../utils/appwriteConfig";
-import { ID } from "appwrite";
-import { Link, useNavigate, Navigate } from "react-router-dom";
-import userContext from "../utils/userContext";
 
-const Register = () => {
-  const [fullName, setFullName] = useState("");
+import { Link, useNavigate, Navigate } from "react-router-dom";
+import { account } from "../utils/useAppwrite";
+import userContext from "../utils/userContext";
+import Header from "./Header";
+
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
+  const navigate = useNavigate();
   const { userInfo, setUserInfo } = useContext(userContext);
 
-  const navigate = useNavigate();
-  const HeaderModified = headerWithHomeBtn(Header);
-  const registerUser = async (e) => {
-    setStatusMessage("");
-    try {
-      e.preventDefault();
-      const promise = await account.create(
-        ID.unique(),
-        email,
-        password,
-        fullName
-      );
-      if (promise) {
-        loginUser();
+  const handleLogin = (e) => {
+    e.preventDefault();
+    account.createEmailSession(email, password).then(
+      () => {
+        account.get().then((res) => {
+          setUserInfo(res);
+          console.log(userInfo);
+          navigate("/profile");
+        });
+      },
+      (err) => {
+        setStatusMessage(err.message);
       }
-    } catch (err) {
-      setStatusMessage(err.message);
-    }
-  };
-
-  const loginUser = () => {
-    account.createEmailSession(email, password).then((res) => {
-      setUserInfo(res);
-      navigate("/profile");
-    });
+    );
   };
 
   if (userInfo.length !== 0) {
-    return <Navigate to="/profile" />;
+    // return <Navigate to="/profile" />;
   }
-
   return (
     <div className="flex h-full flex-col p-4 justify-center items-center">
-      <HeaderModified />
-      <form className="w-5/6 md:w-[350px]" onSubmit={registerUser}>
+      <Header />
+      <form className="w-5/6 md:w-[350px]" onSubmit={handleLogin}>
         <div className="w-full flex-col mt-8 flex justify-center items-center">
           <div className="w-full">
-            <label htmlFor="fullName">Full Name</label>
-            <input
-              type="text"
-              required
-              className="block w-full border border-gray-400 px-4 py-2 rounded-sm"
-              id="fullName"
-              name="fullName"
-              value={fullName}
-              onChange={(e) => {
-                setFullName(e.target.value);
-              }}
-              placeholder="Full Name"
-            />
-          </div>
-          <div className="mt-2 w-full">
             <label htmlFor="email">Email</label>
             <input
               type="email"
-              required
               className="block w-full border border-gray-400 px-4 py-2 rounded-sm"
               id="email"
               name="email"
@@ -76,13 +48,13 @@ const Register = () => {
                 setEmail(e.target.value);
               }}
               placeholder="Email"
+              required
             />
           </div>
           <div className="mt-2 w-full">
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              required
               className="block w-full border border-gray-400 px-4 py-2 rounded-sm"
               id="password"
               name="password"
@@ -91,17 +63,18 @@ const Register = () => {
                 setPassword(e.target.value);
               }}
               placeholder="Password"
+              required
             />
           </div>
           <button
             type="submit"
             className="rounded-sm bg-pink-600 text-white px-4 py-2.5 font-bold mt-4 w-full"
           >
-            Sign Up
+            Sign In
           </button>
-          <Link to="/login" className="w-full">
+          <Link to="/register" className="w-full">
             <p className="mt-2 text-pink-800 font-semibold">
-              Already have an account ? Sign In here
+              Don't have and Account ? Sign Up here
             </p>
           </Link>
           {statusMessage !== "" ? (
@@ -115,4 +88,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

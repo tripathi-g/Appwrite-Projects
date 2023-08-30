@@ -2,13 +2,13 @@ import { Link, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import userContext from "../utils/userContext";
 import Header from "./Header";
-import { account } from "../utils/appwriteConfig";
+import { account } from "../utils/useAppwrite";
 const Home = () => {
   const { userInfo } = useContext(userContext);
 
   const handleGoogleLogin = () => {
     try {
-      account.createOAuth2Session("google", "authapp.tripathig.in/googlelogin");
+      account.createOAuth2Session("google",window.location.href,window.location.href);
     } catch (err) {
       console.log(err.message);
     }

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import userContext from "../utils/userContext";
-import { account } from "../utils/appwriteConfig";
+import { account } from "../utils/useAppwrite";
 import { Navigate } from "react-router-dom";
 
 const Profile = () => {
@@ -23,6 +23,7 @@ const Profile = () => {
     });
   };
 
+  console.log("profile page"+userInfo)
   if (userInfo.length !== 0) {
     return (
       <div className="flex h-full justify-center items-center">

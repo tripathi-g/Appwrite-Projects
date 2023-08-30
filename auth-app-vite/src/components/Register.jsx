@@ -1,43 +1,80 @@
 import { useState, useContext } from "react";
-import Header, { headerWithHomeBtn } from "./Header";
+import Header from "./Header";
+import { account } from "../utils/useAppwrite";
+import { ID } from "appwrite";
 import { Link, useNavigate, Navigate } from "react-router-dom";
-import { account } from "../utils/appwriteConfig";
 import userContext from "../utils/userContext";
 
-const Login = () => {
+const Register = () => {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
-  const navigate = useNavigate();
   const { userInfo, setUserInfo } = useContext(userContext);
-  const HeaderModified = headerWithHomeBtn(Header);
-  const handleLogin = async (e) => {
-    e.preventDefault();
+
+  const navigate = useNavigate();
+
+  const registerUser = async (e) => {
     setStatusMessage("");
-    const promise = account.createEmailSession(email, password);
-    promise.then(
-      (res) => {
-        setUserInfo(res);
-        navigate("/profile");
+    try {
+      e.preventDefault();
+      const promise = await account.create(
+        ID.unique(),
+        email,
+        password,
+        fullName
+      );
+      if (promise) {
+        loginUser();
+      }
+    } catch (err) {
+      setStatusMessage(err.message);
+    }
+  };
+
+  const loginUser = () => {
+    account.createEmailSession(email, password).then(
+      () => {
+        account.get().then((res) => {
+          setUserInfo(res);
+          navigate("/profile");
+        });
       },
       (err) => {
         setStatusMessage(err.message);
-        console.log(err.message);
       }
     );
   };
+
   if (userInfo.length !== 0) {
     return <Navigate to="/profile" />;
   }
+
   return (
     <div className="flex h-full flex-col p-4 justify-center items-center">
-      <HeaderModified />
-      <form className="w-5/6 md:w-[350px]" onSubmit={handleLogin}>
+      <Header />
+      <form className="w-5/6 md:w-[350px]" onSubmit={registerUser}>
         <div className="w-full flex-col mt-8 flex justify-center items-center">
           <div className="w-full">
+            <label htmlFor="fullName">Full Name</label>
+            <input
+              type="text"
+              required
+              className="block w-full border border-gray-400 px-4 py-2 rounded-sm"
+              id="fullName"
+              name="fullName"
+              value={fullName}
+              onChange={(e) => {
+                setFullName(e.target.value);
+              }}
+              placeholder="Full Name"
+            />
+          </div>
+          <div className="mt-2 w-full">
             <label htmlFor="email">Email</label>
             <input
               type="email"
+              required
               className="block w-full border border-gray-400 px-4 py-2 rounded-sm"
               id="email"
               name="email"
@@ -46,13 +83,13 @@ const Login = () => {
                 setEmail(e.target.value);
               }}
               placeholder="Email"
-              required
             />
           </div>
           <div className="mt-2 w-full">
             <label htmlFor="password">Password</label>
             <input
               type="password"
+              required
               className="block w-full border border-gray-400 px-4 py-2 rounded-sm"
               id="password"
               name="password"
@@ -61,18 +98,17 @@ const Login = () => {
                 setPassword(e.target.value);
               }}
               placeholder="Password"
-              required
             />
           </div>
           <button
             type="submit"
             className="rounded-sm bg-pink-600 text-white px-4 py-2.5 font-bold mt-4 w-full"
           >
-            Sign In
+            Sign Up
           </button>
-          <Link to="/register" className="w-full">
+          <Link to="/login" className="w-full">
             <p className="mt-2 text-pink-800 font-semibold">
-              Don't have and Account ? Sign Up here
+              Already have an account ? Sign In here
             </p>
           </Link>
           {statusMessage !== "" ? (
@@ -86,4 +122,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

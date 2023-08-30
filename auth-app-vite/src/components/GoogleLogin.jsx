@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { account } from "../utils/appwriteConfig";
+import { account } from "../utils/useAppwrite";
 const GoogleLogin = () => {
   useEffect(() => {
     account.createJWT().then(

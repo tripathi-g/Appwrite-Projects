@@ -1,4 +1,4 @@
-import { account } from "./appwriteConfig";
+import { account } from "./useAppwrite";
 
 export const checkIsLoggedIn = () => {
   return new Promise(async (resolve, reject) => {
