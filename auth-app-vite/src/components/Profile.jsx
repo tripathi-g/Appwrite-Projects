@@ -1,29 +1,19 @@
 import { useContext, useEffect } from "react";
 import userContext from "../utils/userContext";
-import { account } from "../utils/useAppwrite";
 import { Navigate } from "react-router-dom";
+import useAppwrite from "../utils/useAppwrite";
 
 const Profile = () => {
   const { userInfo, setUserInfo } = useContext(userContext);
-
-  useEffect(() => {
-    account.createJWT().then(
-      (res) => {
-        console.log(res);
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
-  });
+  const { logoutUser } = useAppwrite();
 
   const handleLogout = () => {
-    account.deleteSession("current").then((res) => {
+    logoutUser().then(() => {
       setUserInfo([]);
     });
   };
 
-  console.log("profile page"+userInfo)
+  console.log("profile page" + userInfo);
   if (userInfo.length !== 0) {
     return (
       <div className="flex h-full justify-center items-center">

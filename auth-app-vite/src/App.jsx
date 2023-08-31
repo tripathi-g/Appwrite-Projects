@@ -6,14 +6,13 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
-import GoogleLogin from "./components/GoogleLogin";
-import { checkIsLoggedIn } from "./utils/useIsLoggedIn";
+import useAppwrite from "./utils/useAppwrite";
 
 function App() {
   const [userInfo, setUserInfo] = useState([]);
-
+  const { isLoggedIn } = useAppwrite();
   useEffect(() => {
-    checkIsLoggedIn().then((res) => {
+    isLoggedIn().then((res) => {
       setUserInfo(res);
     });
   }, []);
@@ -26,7 +25,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/googlelogin" element={<GoogleLogin />} />
         </Routes>
       </Router>
       <Outlet />

@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 
 import { Link, useNavigate, Navigate } from "react-router-dom";
-import { account } from "../utils/useAppwrite";
+import useAppwrite from "../utils/useAppwrite";
 import userContext from "../utils/userContext";
 import Header from "./Header";
 
@@ -11,16 +11,16 @@ const Login = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const navigate = useNavigate();
   const { userInfo, setUserInfo } = useContext(userContext);
+  const { loginUserEmail } = useAppwrite();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    account.createEmailSession(email, password).then(
-      () => {
-        account.get().then((res) => {
-          setUserInfo(res);
-          console.log(userInfo);
-          navigate("/profile");
-        });
+
+    loginUserEmail(email, password).then(
+      (res) => {
+        setUserInfo(res);
+        console.log(res);
+        navigate("/profile");
       },
       (err) => {
         setStatusMessage(err.message);
@@ -29,7 +29,7 @@ const Login = () => {
   };
 
   if (userInfo.length !== 0) {
-    // return <Navigate to="/profile" />;
+    return <Navigate to="/profile" />;
   }
   return (
     <div className="flex h-full flex-col p-4 justify-center items-center">

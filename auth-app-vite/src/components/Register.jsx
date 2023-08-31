@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import Header from "./Header";
-import { account } from "../utils/useAppwrite";
-import { ID } from "appwrite";
+import useAppwrite from "../utils/useAppwrite";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import userContext from "../utils/userContext";
 
@@ -11,39 +10,39 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const { userInfo, setUserInfo } = useContext(userContext);
-
+  const [signUpBtnText, setSignUpBtnText] = useState("Sign Up");
   const navigate = useNavigate();
 
+  const { loginUserEmail, signUpUser, addUserToTeamA, isLoggedIn } =
+    useAppwrite();
+
   const registerUser = async (e) => {
+    e.preventDefault();
+    setSignUpBtnText("Signing Up.. Please Wait");
     setStatusMessage("");
     try {
-      e.preventDefault();
-      const promise = await account.create(
-        ID.unique(),
-        email,
-        password,
-        fullName
-      );
-      if (promise) {
-        loginUser();
+      const signup = await signUpUser(email, password, fullName);
+
+      if (signup) {
+        console.log("inside signup");
+        setSignUpBtnText("Sign Up");
+        loginUserEmail(email, password).then(
+          () => {
+            isLoggedIn().then((res) => {
+              setUserInfo(res);
+              addUserToTeamA(userInfo.email);
+            });
+            navigate("/profile");
+          },
+          (err) => {
+            setStatusMessage(err.message);
+          }
+        );
       }
     } catch (err) {
+      setSignUpBtnText("Sign Up");
       setStatusMessage(err.message);
     }
-  };
-
-  const loginUser = () => {
-    account.createEmailSession(email, password).then(
-      () => {
-        account.get().then((res) => {
-          setUserInfo(res);
-          navigate("/profile");
-        });
-      },
-      (err) => {
-        setStatusMessage(err.message);
-      }
-    );
   };
 
   if (userInfo.length !== 0) {
@@ -104,7 +103,7 @@ const Register = () => {
             type="submit"
             className="rounded-sm bg-pink-600 text-white px-4 py-2.5 font-bold mt-4 w-full"
           >
-            Sign Up
+            {signUpBtnText}
           </button>
           <Link to="/login" className="w-full">
             <p className="mt-2 text-pink-800 font-semibold">
