@@ -1,26 +1,9 @@
 {
     "projectId": "64eb1f41c5f0f30ab422",
-    "projectName": "Auth App with Appwrite",
+    "projectName": "Auth app with Appwrite",
     "functions": [
         {
-            "$id": "64efa2244c14bef704c0",
-            "name": "My Awesome Function",
-            "runtime": "node-16.0",
-            "path": "functions/My Awesome Function",
-            "entrypoint": "src/index.js",
-            "ignore": [
-                "node_modules",
-                ".npm"
-            ],
-            "execute": [
-                "any"
-            ],
-            "events": [],
-            "schedule": "",
-            "timeout": 15
-        },
-        {
-            "$id": "64f0526ec7ec443f4c19",
+            "$id": "64f19915b6569c25db49",
             "name": "addUserToTeamA",
             "runtime": "node-16.0",
             "path": "functions/addUserToTeamA",
@@ -37,16 +20,16 @@
             "timeout": 15
         },
         {
-            "$id": "64f0c07f20185147c41a",
-            "name": "signUpUser",
+            "$id": "64f1f242a42408a603f1",
+            "name": "Test Function",
             "runtime": "node-16.0",
-            "path": "functions/signUpUser",
+            "path": "functions/Test Function",
             "entrypoint": "src/index.js",
             "ignore": [
                 "node_modules",
                 ".npm"
             ],
-            "execute": [],
+            "execute": ["any"],
             "events": [],
             "schedule": "",
             "timeout": 15

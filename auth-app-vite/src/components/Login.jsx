@@ -19,7 +19,6 @@ const Login = () => {
     loginUserEmail(email, password).then(
       (res) => {
         setUserInfo(res);
-        console.log(res);
         navigate("/profile");
       },
       (err) => {

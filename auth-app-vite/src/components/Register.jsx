@@ -24,15 +24,17 @@ const Register = () => {
       const signup = await signUpUser(email, password, fullName);
 
       if (signup) {
-        console.log("inside signup");
         setSignUpBtnText("Sign Up");
         loginUserEmail(email, password).then(
           () => {
             isLoggedIn().then((res) => {
               setUserInfo(res);
-              addUserToTeamA(userInfo.email);
+              // addUserToTeamA(userInfo.email).then(
+              //   (res) => console.log(res),
+              //   (err) => console.log(err)
+              // );
+              navigate("/profile");
             });
-            navigate("/profile");
           },
           (err) => {
             setStatusMessage(err.message);

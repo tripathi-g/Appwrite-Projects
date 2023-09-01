@@ -13,7 +13,6 @@ const Profile = () => {
     });
   };
 
-  console.log("profile page" + userInfo);
   if (userInfo.length !== 0) {
     return (
       <div className="flex h-full justify-center items-center">

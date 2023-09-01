@@ -1,4 +1,4 @@
-import { Client, Account, Functions, ID } from "appwrite";
+import { Client, Account, Functions, ID, Teams } from "appwrite";
 import userContext from "./userContext";
 
 const useAppwrite = () => {
@@ -50,23 +50,32 @@ const useAppwrite = () => {
     });
   };
 
-  const addUserToTeamA = async (email) => {
-    const addUserFnId = import.meta.env.VITE_APPWRITE_FUNC_ADDUSERTOTEAMA;
-    const fnRes = await functions.createExecution(
-      addUserFnId,
-      JSON.stringify({ email: email }),
-      false,
-      " ",
-      "POST"
-    );
-    console.log(fnRes);
-    if (fnRes.response === "true") {
-      return true;
-      console.log("User added to TEAM - A");
-    } else {
-      return false;
-      console.log("Unable tp add user to TEAM - A");
-    }
+  const addUserToTeamA = (email) => {
+    return new Promise(async (resolve, reject) => {
+      console.log("addusercalled");
+      try {
+        console.log();
+        const addUserFnId = import.meta.env.VITE_APPWRITE_FUNC_ADDUSERTOTEAMA;
+        const fnRes = await functions.createExecution(
+          addUserFnId,
+          JSON.stringify({ id: ID.unique(), teamName: "ABCD", email: email }),
+          false,
+          " ",
+          "POST"
+        );
+
+        if (fnRes.added === "true") {
+          resolve(true);
+        } else {
+          reject(fnRes);
+          console.log(fnRes);
+          return false;
+        }
+      } catch (err) {
+        console.log(err);
+        reject(fnRes);
+      }
+    });
   };
 
   const isLoggedIn = () => {
@@ -91,6 +100,7 @@ const useAppwrite = () => {
   };
 
   return {
+    account,
     functions,
     loginUserEmail,
     signUpUser,
